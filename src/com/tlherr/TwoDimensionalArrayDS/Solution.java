@@ -6,32 +6,36 @@ import java.text.*;
 import java.math.*;
 import java.util.regex.*;
 
+/**
+ * Calculate the hourglass sum for every hourglass in , then print the maximum hourglass sum.
+ *
+ * Input Format:
+ * There are  lines of input, where each line contains  space-separated integers describing 2D Array ;
+ * every value in  will be in the inclusive range of -9 to 9.
+ *
+ *
+ */
 public class Solution {
 
     private final static int hourGlassWidth = 3;
 
     public static void main(String[] args) {
-        //Scanner in = new Scanner(System.in);
-        System.out.printf("%1$22s", "Creating Matrix\n");
+        Scanner in = new Scanner(System.in);
         int arr[][] = new int[6][6];
-        for(int arr_i=0; arr_i < 6; arr_i++){
+        for(int arr_i=0; arr_i < 6; arr_i++) {
             for(int arr_j=0; arr_j < 6; arr_j++){
-                //arr[arr_i][arr_j] = in.nextInt();
-                arr[arr_i][arr_j] = new Random().nextInt(18)-9;
-                System.out.printf("%1$4s", arr[arr_i][arr_j]);
+                arr[arr_i][arr_j] = in.nextInt();
             }
-            System.out.println("\n");
         }
+
 
         class Hourglass {
 
-            private int position;
             private int[] toprow;
             private int mid;
             private int[] bottomrow;
 
-            public Hourglass(int position, int[] toprow, int mid, int[] bottomrow) {
-                this.position = position;
+            public Hourglass(int[] toprow, int mid, int[] bottomrow) {
                 this.toprow = toprow;
                 this.mid = mid;
                 this.bottomrow = bottomrow;
@@ -53,10 +57,6 @@ public class Solution {
                 return sum;
             }
 
-            public int getPosition() {
-                return position;
-            }
-
             @Override
             public String toString() {
                 String returnString = "";
@@ -75,7 +75,6 @@ public class Solution {
 
         ArrayList<Hourglass> hourGlasses = new ArrayList<Hourglass>();
 
-        int counter = 0;
         for(int y_counter = 0; y_counter<arr.length; y_counter++) {
             for(int x_counter = 0; x_counter<arr[y_counter].length; x_counter++) {
 
@@ -83,34 +82,24 @@ public class Solution {
 //                        arr[y_counter][x_counter]);
 
                 if(hourGlassExists(arr, x_counter, y_counter)) {
-                    hourGlasses.add(new Hourglass(counter, Arrays.copyOfRange(arr[y_counter], x_counter, x_counter+hourGlassWidth),
+                    hourGlasses.add(new Hourglass(Arrays.copyOfRange(arr[y_counter], x_counter, x_counter+hourGlassWidth),
                             arr[y_counter+1][x_counter+1],
                             Arrays.copyOfRange(arr[y_counter+hourGlassWidth-1], x_counter, x_counter+hourGlassWidth)
                     ));
-                    counter++;
                 }
             }
         }
 
         int largestSum = 0;
-        int largestPosition = 0;
         for(Hourglass glass: hourGlasses) {
-            System.out.println("HourGlass ("+glass.getPosition()+")");
-            System.out.println(glass.toString());
-            System.out.println("Sum: "+glass.getSum());
 
             if(glass.getSum()>largestSum) {
                 largestSum = glass.getSum();
-                largestPosition = glass.getPosition();
             }
 
         }
 
-        System.out.println("The largest summed hourglass is:\n "+hourGlasses.get(largestPosition).toString()
-                + "\n at position "+largestPosition +" with sum: " +largestSum);
-
-        //Need to find all possible hourglasses and sum them
-        //Then need to print out the hourglass with the maximum sum
+        System.out.println(largestSum);
     }
 
     /**
